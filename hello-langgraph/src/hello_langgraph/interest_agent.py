@@ -1,13 +1,13 @@
 from langgraph.graph import StateGraph, START, END
-from typing import TypedDict
+from typing import TypedDict, NotRequired
 import time
 
 class OperationState(TypedDict):
     rate: int|float
     principal: int|float
     years: float|int
-    simple_interest: float
-    compound_interest: float
+    simple_interest: NotRequired[float]
+    compound_interest: NotRequired[float]
 
 
 def calculate_simple_interest(state: OperationState) -> OperationState:
@@ -39,3 +39,5 @@ if "__name__" == "__main__":
     principal    = float(take_inputs("principal amount" ,"How much loan do you need?"))
     years = float(take_inputs("number of years" ,"How many years will it need for you to repay?"))
     graph.invoke(OperationState (rate=rate,principal=principal,years=years))
+
+   # operation_state:OperationState ={"rate":rate,"principal":principal,"years":years}
