@@ -22,7 +22,7 @@ def subtract(state: OperationState) -> OperationState:
     state["difference"] = state["a"] - state["b"]
     return state
 
-
+#region commented code
 # state_graph = StateGraph(
 #     name="Operation Graph",
 #     initial_state=OperationState(a=5, b=3, sum=None, product=None, difference=None),
@@ -51,7 +51,7 @@ def subtract(state: OperationState) -> OperationState:
 #         "subtract": lambda state: time.sleep(1) or state,
 #     }
 # )   
-
+#endregion
 
 state_graph = StateGraph(OperationState)
 state_graph.add_node("add",add)

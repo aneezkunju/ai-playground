@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 .langgraph_api/
 *.py[cod]
+.notes_langgraph_vscode_summary.md
