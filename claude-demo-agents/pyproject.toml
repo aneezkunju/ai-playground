@@ -1,0 +1,21 @@
+[project]
+name = "claude-demo-agents"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "aneezkunju", email = "aneezkunju@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "claude-agent-sdk>=0.2.162",
+    "ipykernel>=7.4.0",
+    "python-dotenv>=1.2.3",
+]
+
+[project.scripts]
+claude-demo-agents = "claude_demo_agents:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
