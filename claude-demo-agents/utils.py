@@ -13,7 +13,7 @@ import os
 
 MODEL_NAME ="claude-haiku-4-5"
 
-def get_default_option(**arguments):    
+def get_default_option(**arguments) -> ClaudeAgentOptions:    
    
     settings= {
         "model": MODEL_NAME,
@@ -21,6 +21,7 @@ def get_default_option(**arguments):
     }
     settings.update(arguments)
     options = ClaudeAgentOptions (**settings )
+    return options
 
 def parse_message(message: Message): 
     if isinstance(message, SystemMessage):
