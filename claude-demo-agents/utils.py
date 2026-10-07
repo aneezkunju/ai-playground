@@ -40,4 +40,6 @@ def parse_message(message: Message):
         print(f"*******RESULT MESSAGE STARTS ******")
         print(f"duration: {message.duration_ms} ms")
         print(f"cost in usd: {message.total_cost_usd} ms")
+        if message.session_id :
+            print(f"\033[1mNOTE THE SESSION ID: {message.session_id}\033[m]")
         print(f"*******RESULT MESSAGE ENDS ******")
