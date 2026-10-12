@@ -1,3 +1,6 @@
+'''
+Experimenting with sessions and maintaining sessions.
+'''
 from dotenv import load_dotenv
 from typing import TypedDict, Literal
 from claude_agent_sdk import ClaudeAgentOptions, query, ClaudeSDKClient, ResultMessage
