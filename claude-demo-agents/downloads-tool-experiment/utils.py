@@ -18,7 +18,7 @@ from claude_agent_sdk.types import (
 
 )
     
-import os
+import os, sys, xattr
 
 MODEL_NAME ="claude-haiku-4-5"
 
@@ -62,4 +62,14 @@ def parse_message(message: Message):
         
         print(f"*******RESULT MESSAGE ENDS ******")
 
-    
+def get_qurantine_info(path) ->bool:
+    try:
+        data = xattr.getxattr(path,"com.apple.quarantine")
+        data = data.decode("utf-8").split(";")
+        return True
+    except OSError:
+        return False
+
+if __name__ == "__main__" :
+    # get_qurantine_info("downloads-tool-experiment/downloads/Manager_Affidavit.docx")
+    get_qurantine_info("downloads-tool-experiment/downloads/graph.py")

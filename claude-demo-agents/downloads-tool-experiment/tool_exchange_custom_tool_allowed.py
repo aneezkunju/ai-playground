@@ -21,6 +21,8 @@ from claude_agent_sdk.types import (
 SCRIPT_DIR = Path(__file__).parent
 DOWNLOADS_DIR = SCRIPT_DIR / "downloads"
 
+#NOTES : irrespective of hooks allowing, the call back tool checker is called and it ifinally decides
+
 # 1. Define the callback function
 async def custom_tool_checker(
     tool_name: str, 
@@ -40,18 +42,22 @@ async def custom_tool_checker(
         return PermissionResultDeny(behavior='deny', reason="User rejected the tool execution.")
 
 
-async def enforce_human_only_policy(input_data,tool_use_id,context):
+async def enforce_locally_authored_only_policy(input_data,tool_use_id,context):
+    '''
+    prevent deletion or file operation on files which are  locally authored. Downloaded from internet items can be
+    '''
     tool_name = input_data.get("tool_name") if isinstance(input_data, dict) else getattr(input_data, "tool_name", None)
     tool_input = input_data.get("tool_input",{}) if isinstance(input_data, dict) else getattr(input_data, "tool_input", {})
-    if tool_name in ["Read", "Edit",  "Write"]:
+    # if tool_name in ["Read", "Edit",  "Write", "Bash", "Glob"]:
+    if tool_name in ["Read", "Edit",  "Write", "Bash"]:
         file_path = tool_input.get("path") or tool_input.get("command","")
-        if not is_allowed_author(file_path):
+        if  is_allowed_author(file_path):
         # Return SDK denial response
             return {
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
-                    "reason": f"Access blocked: '{file_path}' was not authored by a human."
+                    "reason": f"Access blocked: '{file_path}' was  authored locally. Locally authored files cannot be deleted"
                 }
             }
 # Allow tool to run normally
@@ -71,7 +77,7 @@ async def main(question:str):
                 "PreToolUse": [
                     HookMatcher(
                         matcher="*",
-                        hooks =[enforce_human_only_policy])
+                        hooks =[enforce_locally_authored_only_policy])
                 ]
             }
         )
@@ -100,9 +106,9 @@ async def ask_question():
 
 def is_allowed_author(path:str) ->bool :
     '''
-    given a file path in the macos, the function returns if the author of the file is allowed,
-    the tool will be used to determine if the basic file operations on thsi file can be done
-    or not
+    given a file path in the macos, the function returns if the file is locally created (return true)
+    or externally downloaded (return false), this can be used as a tool to allow deletion or edit if NOT
+    locally authored
     '''
     if not path or not isinstance(path, str):
         return True  # Fallback allow if no explicit path string was passed
@@ -116,7 +122,7 @@ def is_allowed_author(path:str) ->bool :
 
     try:
         # Get list of extended attributes on macOS
-        attrs = os.listxattr(file_path)
+        attrs = os.listattr(file_path)
         
         # If the file has a quarantine flag, it was downloaded/externally sourced
         if "com.apple.quarantine" in attrs:
